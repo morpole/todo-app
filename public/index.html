@@ -9,6 +9,7 @@
     <h1>To-Do List</h1>
     <form id="taskForm">
         <input type="text" id="description" placeholder="New task">
+        <input type="text" id="priority" placeholder="Priority (e.g., High, Medium, Low)">
         <button type="submit">Add Task</button>
     </form>
     <ul id="taskList"></ul>
@@ -17,12 +18,14 @@
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const description = document.getElementById('description').value;
+            const priority = document.getElementById('priority').value;
             await fetch('/tasks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ description })
+                body: JSON.stringify({ description, priority })
             });
             document.getElementById('description').value = '';
+            document.getElementById('priority').value = '';
             loadTasks();
         });
 
@@ -33,7 +36,7 @@
             taskList.innerHTML = '';
             tasks.forEach(task => {
                 const li = document.createElement('li');
-                li.textContent = `${task.description} (Priority: ${task.priority})`;
+                li.textContent = `${task.description} - Priority: ${task.priority}`;
                 taskList.appendChild(li);
             });
         }
