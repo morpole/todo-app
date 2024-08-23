@@ -17,10 +17,7 @@ app.use('/tasks', taskRoutes);
 const mongoUri = process.env.MONGO_URI;
 
 // Connect to MongoDB Atlas
-mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(mongoUri)
 .then(() => console.log('Connected to MongoDB Atlas!'))
 .catch(err => console.error('Error connecting to MongoDB', err));
 
