@@ -2,17 +2,25 @@
   "name": "todo-app",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+ "scripts": {
+  "test": "mocha",
+  "test:selenium": "mocha test/selenium.test.js"
+},
+
+
   "keywords": [],
   "author": "",
   "license": "ISC",
+
   "dependencies": {
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.5.3"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "mocha": "^10.7.3",
+    "selenium-webdriver": "^4.23.0"
+  }
 }

@@ -127,7 +127,7 @@
             const tasks = await response.json();
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
-            tasks.forEach(task => {
+            tasks.reverse().forEach(task => {
                 const tr = document.createElement('tr');
                 tr.className = 'bg-gray-800';
                 tr.innerHTML = `
