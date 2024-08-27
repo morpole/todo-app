@@ -1,54 +1,8 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-</head>
-<body>
-    <h1>To-Do List</h1>
-    <form id="taskForm">
-        <input type="text" id="description" placeholder="New task">
-        <input type="text" id="priority" placeholder="Priority (e.g., High, Medium, Low)">
-        <button type="submit">Add Task</button>
-    </form>
-    <ul id="taskList"></ul>
-
-    <script>
-        document.getElementById('taskForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const description = document.getElementById('description').value;
-            const priority = document.getElementById('priority').value;
-            await fetch('/tasks', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ description, priority })
-            });
-            document.getElementById('description').value = '';
-            document.getElementById('priority').value = '';
-            loadTasks();
-        });
-
-        async function loadTasks() {
-            const response = await fetch('/tasks');
-            const tasks = await response.json();
-            const taskList = document.getElementById('taskList');
-            taskList.innerHTML = '';
-            tasks.forEach(task => {
-                const li = document.createElement('li');
-                li.textContent = `${task.description} - Priority: ${task.priority}`;
-                taskList.appendChild(li);
-            });
-        }
-
-        loadTasks();
-    </script>
-</body>
-</html> -->
 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,26 +11,9 @@
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        .task-table {
-            border-spacing: 0 15px;
-        }
-
-        .task-table tr {
-            border-radius: 20px;
-        }
-
-        .task-table tr td:nth-child(n+5),
-        .task-table tr th:nth-child(n+5) {
-            border-radius: 0 .625rem .625rem 0;
-        }
-
-        .task-table tr td:nth-child(1),
-        .task-table tr th:nth-child(1) {
-            border-radius: .625rem 0 0 .625rem;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
 </head>
+
 <body class="bg-gray-900">
     <div class="flex items-center justify-center min-h-screen">
         <div class="w-full max-w-4xl bg-gray-800 p-5 rounded-lg">
@@ -84,25 +21,15 @@
             <form id="taskForm" class="mb-5">
                 <div class="flex space-x-4">
                     <input type="text" id="description" placeholder="New task" class="p-2 rounded-lg border-gray-600 border-2 w-full">
-                    <input type="text" id="priority" placeholder="Priority" class="p-2 rounded-lg border-gray-600 border-2">
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-plus-lg"></i>
                     </button>
                 </div>
             </form>
             <div class="overflow-auto">
-                <table class="task-table text-gray-400 border-separate space-y-6 text-sm w-full">
-                    <thead class="bg-gray-800 text-gray-500">
-                        <tr>
-                            <th class="p-3">Description</th>
-                            <th class="p-3 text-left">Priority</th>
-                            <th class="p-3 text-left">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="taskList">
-                        <!-- Tasks will be dynamically inserted here -->
-                    </tbody>
-                </table>
+                <div id="taskList" class="space-y-4">
+                    <!-- Tasks will be dynamically inserted here -->
+                </div>
             </div>
         </div>
     </div>
@@ -111,14 +38,14 @@
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const description = document.getElementById('description').value;
-            const priority = document.getElementById('priority').value;
+
             await fetch('/tasks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ description, priority })
+                body: JSON.stringify({ description })
             });
             document.getElementById('description').value = '';
-            document.getElementById('priority').value = '';
+
             loadTasks();
         });
 
@@ -128,45 +55,70 @@
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
             tasks.reverse().forEach(task => {
-                const tr = document.createElement('tr');
-                tr.className = 'bg-gray-800';
-                tr.innerHTML = `
-                    <td class="p-3">${task.description}</td>
-                    <td class="p-3">${task.priority}</td>
-                    <td class="p-3">
-                        <a href="#" class="text-gray-400 hover:text-gray-100 mr-2">
-                            <i class="material-icons-outlined text-base">visibility</i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-gray-100 mx-2">
+                const div = document.createElement('div');
+                div.className = 'task-item flex items-center justify-between p-4 rounded-lg bg-gray-700 shadow-md';
+
+                 // Add the 'completed' class based on task completion
+        if (task.completed) {
+            div.classList.add('completed');
+        }
+                
+                div.innerHTML = `
+                    <div class="flex items-center">
+                        <button class="completion-btn bg-gray-800 text-white rounded-full p-2 mr-3">
+                            <i class="material-icons-outlined">${task.completed ? 'check_circle' : 'radio_button_unchecked'}</i>
+                        </button>
+                        <span class="text-gray-100">${task.description}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <a href="#" class="text-gray-400 hover:text-gray-100 edit-task">
                             <i class="material-icons-outlined text-base">edit</i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-gray-100 ml-2 delete-task" data-id="${task._id}">
-            <i class="material-icons-round text-base">delete_outline</i>
-        </a>
-                    </td>
+                        <a href="#" class="text-gray-400 hover:text-gray-100 delete-task" data-id="${task._id}">
+                            <i class="material-icons-round text-base">delete_outline</i>
+                        </a>
+                    </div>
                 `;
-                taskList.appendChild(tr);
+
+                taskList.appendChild(div);
             });
 
-    // Add delete functionality to the delete buttons
-    document.querySelectorAll('.delete-task').forEach(button => {
-        button.addEventListener('click', async function() {
-            const taskId = this.getAttribute('data-id');
-            await deleteTask(taskId);
-            loadTasks(); // Reload the tasks after deletion
-        });
-    });
-}
+            // Add delete functionality to the delete buttons
+            document.querySelectorAll('.delete-task').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const taskId = this.getAttribute('data-id');
+                    await deleteTask(taskId);
+                    loadTasks(); // Reload the tasks after deletion
+                });
+            });
 
-async function deleteTask(id) {
-    await fetch(`/tasks/${id}`, {
-        method: 'DELETE'
-    });
-}
-        
+            // Add completion functionality to the completion buttons
+            document.querySelectorAll('.completion-btn').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const taskElement = this.closest('.task-item');
+                    const taskId = taskElement.querySelector('.delete-task').getAttribute('data-id');
+                    const isCompleted = this.querySelector('i').innerText === 'check_circle';
+
+                    await fetch(`/tasks/${taskId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ completed: !isCompleted })
+                    });
+                    loadTasks(); // Reload the tasks after completion status update
+                });
+            });
+        }
+
+        async function deleteTask(id) {
+            await fetch(`/tasks/${id}`, {
+                method: 'DELETE'
+            });
+        }
 
         loadTasks();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
+

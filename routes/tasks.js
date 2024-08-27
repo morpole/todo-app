@@ -6,8 +6,7 @@ const Task = require('../models/task');
 router.post('/', async (req, res) => {
     try {
         const task = new Task({
-            description: req.body.description,
-            priority: req.body.priority 
+            description: req.body.description
         });
         await task.save();
         res.status(201).json(task);

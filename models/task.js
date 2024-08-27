@@ -4,11 +4,6 @@ const taskSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true
-    },
-    priority: {
-        type: String,
-        default: 'Low'
-        
     }
  
 }, { strict: false });
