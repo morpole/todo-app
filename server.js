@@ -8,6 +8,9 @@ require('dotenv').config();
 // Initialize Express app
 const app = express();
 
+// Determine if we're in a production or development environment
+const isProduction = process.env.NODE_ENV === 'production'; 
+
 // Auth0 configuration
 const config = {
   authRequired: true,
