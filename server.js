@@ -1,8 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const taskRoutes = require('./routes/tasks');
-require('dotenv').config();
 const { auth } = require('express-openid-connect');
 
 // Initialize Express app
@@ -61,3 +61,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+console.log('AUTH0_SECRET:', process.env.AUTH0_SECRET);
