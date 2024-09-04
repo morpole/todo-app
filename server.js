@@ -38,7 +38,7 @@ mongoose.connect(mongoUri)
 const config = {
   authRequired: false,
   auth0Logout: true,
-  secret: process.env.AUTH0_SECRET || fun7fc7140297f20a1791b9beab3e1ce08507637f80bea0bea12a43d8e9b7694486,
+  secret: process.env.AUTH0_SECRET,
   baseURL: process.env.BASE_URL || 'http://localhost:3000',
   clientID: process.env.AUTH0_CLIENT_ID, 
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL || 'https://dev-603hvls21rfemblu.eu.auth0.com'
