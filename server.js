@@ -10,7 +10,7 @@ const app = express();
 
 // Auth0 configuration
 const config = {
-  authRequired: false,
+  authRequired: true,
   auth0Logout: true,
   secret: process.env.AUTH0_SECRET || 'default-secret-for-local-testing',
   baseURL: process.env.BASE_URL || 'http://localhost:3000',
@@ -41,7 +41,23 @@ app.listen(PORT, () => {
 });
 
 // Define routes after auth middleware
-app.get('/', (req, res) => {
-  console.log(req.oidc); // Debugging
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+// app.get('/', (req, res) => {
+//   console.log(req.oidc); // Debugging
+//   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+// });
+
+app.get('/protected', (req, res) => {
+  if (req.oidc.isAuthenticated()) {
+    res.send('You are authenticated!');
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.get('/login', (req, res) => {
+  res.oidc.login();
+});
+
+app.get('/logout', (req, res) => {
+  res.oidc.logout();
 });
