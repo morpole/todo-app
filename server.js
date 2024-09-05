@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const taskRoutes = require('./routes/tasks');
 const { auth } = require('express-openid-connect');
+const userRoutes = require('./routes/user');
 require('dotenv').config();
 
 // Initialize Express app
@@ -28,6 +29,7 @@ app.use(auth(config));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use('/tasks', taskRoutes);
+app.use('/api', userRoutes); // Mount the user routes
 
 // MongoDB Atlas connection string
 const mongoUri = process.env.MONGO_URI;
@@ -61,6 +63,11 @@ app.get('/login', (req, res) => {
   res.oidc.login();
 });
 
+
+app.get('/signed-out', (req, res) => {
+  res.sendFile(__dirname + '/public/signout.html');
+});
+
 app.get('/logout', (req, res) => {
-  res.oidc.logout();
+  res.oidc.logout({ returnTo: '/signed-out' });
 });

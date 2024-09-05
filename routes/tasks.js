@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/task');
+const { requiresAuth } = require('express-openid-connect');
+
+// User info route
+router.get('/userinfo', requiresAuth(), (req, res) => {
+    res.json(req.oidc.user);
+  });
 
 // Create a new task
 router.post('/', async (req, res) => {

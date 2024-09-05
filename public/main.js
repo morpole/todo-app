@@ -1,88 +1,92 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load user profile and tasks
+    await loadUserProfile();
+    await loadTasks();
+});
 
-   
-    // Handle form submission
-    document.getElementById('taskForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const description = document.getElementById('description').value;
+// Handle form submission for new tasks
+document.getElementById('taskForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const description = document.getElementById('description').value;
 
-        await fetch('/tasks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ description })
-        });
-        document.getElementById('description').value = '';
+    await fetch('/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description })
+    });
+    document.getElementById('description').value = '';
 
-        loadTasks(); // Reload tasks after adding a new one
+    loadTasks(); // Reload tasks after adding a new one
+});
+
+// Load and display tasks
+async function loadTasks() {
+    const response = await fetch('/tasks');
+    const tasks = await response.json();
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = '';
+
+    tasks.reverse().forEach(task => {
+        const div = document.createElement('div');
+        div.className = 'task-item flex items-center justify-between p-4 rounded-lg bg-gray-700 shadow-md';
+
+        if (task.completed) {
+            div.classList.add('completed');
+        }
+
+        div.innerHTML = `
+            <div class="flex items-center">
+                <button class="completion-btn bg-gray-800 text-white rounded-full p-2 mr-3">
+                    <i class="material-icons-outlined">${task.completed ? 'check_circle' : 'radio_button_unchecked'}</i>
+                </button>
+                <span class="text-gray-100">${task.description}</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <a href="#" class="text-gray-400 hover:text-gray-100 edit-task" data-id="${task._id}">
+                    <i class="material-icons-outlined text-base">edit</i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-gray-100 delete-task" data-id="${task._id}">
+                    <i class="material-icons-round text-base">delete_outline</i>
+                </a>
+            </div>
+        `;
+
+        taskList.appendChild(div);
     });
 
-    // Load and display tasks
-    async function loadTasks() {
-        const response = await fetch('/tasks');
-        const tasks = await response.json();
-        const taskList = document.getElementById('taskList');
-        taskList.innerHTML = '';
+    attachEventListeners(); // Attach event listeners to new elements
+}
 
-        tasks.reverse().forEach(task => {
-            const div = document.createElement('div');
-            div.className = 'task-item flex items-center justify-between p-4 rounded-lg bg-gray-700 shadow-md';
+// Attach event listeners for task buttons
+function attachEventListeners() {
+    // Add completion functionality
+    document.querySelectorAll('.completion-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const taskElement = this.closest('.task-item');
+            const taskId = taskElement.querySelector('.delete-task').getAttribute('data-id');
+            const isCompleted = this.querySelector('i').innerText === 'check_circle';
 
-            if (task.completed) {
-                div.classList.add('completed');
-            }
-
-            div.innerHTML = `
-                <div class="flex items-center">
-                    <button class="completion-btn bg-gray-800 text-white rounded-full p-2 mr-3">
-                        <i class="material-icons-outlined">${task.completed ? 'check_circle' : 'radio_button_unchecked'}</i>
-                    </button>
-                    <span class="text-gray-100">${task.description}</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <a href="#" class="text-gray-400 hover:text-gray-100 edit-task" data-id="${task._id}">
-                        <i class="material-icons-outlined text-base">edit</i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-100 delete-task" data-id="${task._id}">
-                        <i class="material-icons-round text-base">delete_outline</i>
-                    </a>
-                </div>
-            `;
-
-            taskList.appendChild(div);
-        });
-
-        attachEventListeners(); // Attach event listeners to new elements
-    }
-
-    // Attach event listeners for task buttons
-    function attachEventListeners() {
-        // Add completion functionality
-        document.querySelectorAll('.completion-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const taskElement = this.closest('.task-item');
-                const taskId = taskElement.querySelector('.delete-task').getAttribute('data-id');
-                const isCompleted = this.querySelector('i').innerText === 'check_circle';
-
-                await fetch(`/tasks/${taskId}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ completed: !isCompleted })
-                });
-                loadTasks(); // Reload tasks after status update
+            await fetch(`/tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed: !isCompleted })
             });
+            loadTasks(); // Reload tasks after status update
         });
+    });
 
-        // Add delete functionality
-        document.querySelectorAll('.delete-task').forEach(button => {
-            button.addEventListener('click', async function() {
-                const taskId = this.getAttribute('data-id');
-                await fetch(`/tasks/${taskId}`, {
-                    method: 'DELETE'
-                });
-                loadTasks(); // Reload tasks after deletion
+    // Add delete functionality
+    document.querySelectorAll('.delete-task').forEach(button => {
+        button.addEventListener('click', async function() {
+            const taskId = this.getAttribute('data-id');
+            await fetch(`/tasks/${taskId}`, {
+                method: 'DELETE'
             });
+            loadTasks(); // Reload tasks after deletion
         });
+    });
 
-         // Add edit functionality
+    // Add edit functionality
     document.querySelectorAll('.edit-task').forEach(button => {
         button.addEventListener('click', function() {
             const taskId = this.getAttribute('data-id');
@@ -133,10 +137,23 @@
         });
     });
 }
+
+// Load user profile information
+async function loadUserProfile() {
+    const userProfile = document.getElementById('userProfile');
+    const response = await fetch('/api/userinfo'); // Endpoint to get user info
+    const user = await response.json();
+
+    if (user) {
+        const initials = user.name.split(' ').map(name => name[0]).join('');
+        userProfile.innerHTML = `
+            <img src="${user.picture || 'default-profile-pic.jpg'}" alt="${initials}" class="w-8 h-8 rounded-full">
+            <span class="text-gray-100">${user.name || initials}</span>
+            <button id="logoutButton" class="ml-4 text-gray-100 bg-red-500 p-2 rounded">Logout</button>
+        `;
         
-
-    
-
-    // Initial load of tasks
-    loadTasks();
-
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            window.location.href = '/logout'; // Redirect to logout endpoint
+        });
+    }
+}
