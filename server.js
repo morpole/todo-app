@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const taskRoutes = require('./routes/tasks');
 const { auth } = require('express-openid-connect');
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/tasks');
 require('dotenv').config();
 
 // Initialize Express app
