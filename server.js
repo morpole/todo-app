@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const taskRoutes = require('./routes/tasks');
 const { auth } = require('express-openid-connect');
 const userRoutes = require('./routes/tasks');
+const cors = require('cors');
 require('dotenv').config();
 
 // Initialize Express app
@@ -14,16 +15,17 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // Auth0 configuration
 const config = {
-  authRequired: true,
+  authRequired: false,
   auth0Logout: true,
-  secret: process.env.AUTH0_SECRET || 'default-secret-for-local-testing',
-  baseURL: process.env.BASE_URL || 'http://localhost:3000',
+  secret: process.env.AUTH0_SECRET,
+  baseURL: process.env.BASE_URL,
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
 };
 
 // Use auth middleware
 app.use(auth(config));
+app.use(cors());
 
 // Middleware
 app.use(bodyParser.json());
@@ -71,3 +73,6 @@ app.get('/signed-out', (req, res) => {
 app.get('/logout', (req, res) => {
   res.oidc.logout({ returnTo: '/signed-out' });
 });
+
+
+

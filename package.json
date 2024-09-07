@@ -3,30 +3,33 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "test:selenium": "mocha test/selenium.test.js",
+    "test": "jest",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "mongoose",
+    "todo",
+    "api"
+  ],
+  "author": "morpole@gmail.com",
   "license": "ISC",
   "dependencies": {
     "auth0": "^4.9.0",
     "body-parser": "^1.20.2",
     "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-jwt": "^8.4.1",
     "express-openid-connect": "^2.17.1",
-    "jwks-rsa": "^3.1.0",
-    "mongoose": "^8.5.3"
+    "jwks-rsa": "^3.1.0"
   },
   "devDependencies": {
-    "mocha": "^10.7.3",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.0.0",
+    "mongoose": "^8.6.1",
     "selenium-webdriver": "^4.23.0"
-  },
-  "directories": {
-    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -36,5 +39,5 @@
     "url": "https://github.com/morpole/todo-app/issues"
   },
   "homepage": "https://github.com/morpole/todo-app#readme",
-  "description": ""
+  "description": "A TODO application built with Express and Mongoose."
 }
