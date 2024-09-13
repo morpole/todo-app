@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load user profile and tasks
-    await loadUserProfile();
+    // Load tasks on page load
     await loadTasks();
 });
 
@@ -21,40 +20,44 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
 
 // Load and display tasks
 async function loadTasks() {
-    const response = await fetch('/tasks');
-    const tasks = await response.json();
-    const taskList = document.getElementById('taskList');
-    taskList.innerHTML = '';
+    try {
+        const response = await fetch('/tasks');
+        const tasks = await response.json();
+        const taskList = document.getElementById('taskList');
+        taskList.innerHTML = '';
 
-    tasks.reverse().forEach(task => {
-        const div = document.createElement('div');
-        div.className = 'task-item flex items-center justify-between p-4 rounded-lg bg-gray-700 shadow-md';
+        tasks.reverse().forEach(task => {
+            const div = document.createElement('div');
+            div.className = 'task-item flex items-center justify-between p-4 rounded-lg bg-gray-700 shadow-md';
 
-        if (task.completed) {
-            div.classList.add('completed');
-        }
+            if (task.completed) {
+                div.classList.add('completed');
+            }
 
-        div.innerHTML = `
-            <div class="flex items-center">
-                <button class="completion-btn bg-gray-800 text-white rounded-full p-2 mr-3">
-                    <i class="material-icons-outlined">${task.completed ? 'check_circle' : 'radio_button_unchecked'}</i>
-                </button>
-                <span class="text-gray-100">${task.description}</span>
-            </div>
-            <div class="flex items-center space-x-2">
-                <a href="#" class="text-gray-400 hover:text-gray-100 edit-task" data-id="${task._id}">
-                    <i class="material-icons-outlined text-base">edit</i>
-                </a>
-                <a href="#" class="text-gray-400 hover:text-gray-100 delete-task" data-id="${task._id}">
-                    <i class="material-icons-round text-base">delete_outline</i>
-                </a>
-            </div>
-        `;
+            div.innerHTML = `
+                <div class="flex items-center">
+                    <button class="completion-btn bg-gray-800 text-white rounded-full p-2 mr-3">
+                        <i class="material-icons-outlined">${task.completed ? 'check_circle' : 'radio_button_unchecked'}</i>
+                    </button>
+                    <span class="text-gray-100">${task.description}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="#" class="text-gray-400 hover:text-gray-100 edit-task" data-id="${task._id}">
+                        <i class="material-icons-outlined text-base">edit</i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-100 delete-task" data-id="${task._id}">
+                        <i class="material-icons-round text-base">delete_outline</i>
+                    </a>
+                </div>
+            `;
 
-        taskList.appendChild(div);
-    });
+            taskList.appendChild(div);
+        });
 
-    attachEventListeners(); // Attach event listeners to new elements
+        attachEventListeners(); // Attach event listeners to new elements
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+    }
 }
 
 // Attach event listeners for task buttons
@@ -138,22 +141,26 @@ function attachEventListeners() {
     });
 }
 
-// Load user profile information
+// Load user profile information (if needed, adjust as per requirements)
 async function loadUserProfile() {
     const userProfile = document.getElementById('userProfile');
-    const response = await fetch('/api/userinfo'); // Endpoint to get user info
-    const user = await response.json();
+    try {
+        const response = await fetch('/api/userinfo'); // Endpoint to get user info
+        const user = await response.json();
 
-    if (user) {
-        const initials = user.name.split(' ').map(name => name[0]).join('');
-        userProfile.innerHTML = `
-            <img src="${user.picture || 'default-profile-pic.jpg'}" alt="${initials}" class="w-8 h-8 rounded-full">
-            <span class="text-gray-100">${user.name || initials}</span>
-            <button id="logoutButton" class="ml-4 text-gray-100 bg-red-500 p-2 rounded">Logout</button>
-        `;
-        
-        document.getElementById('logoutButton').addEventListener('click', () => {
-            window.location.href = '/logout'; // Redirect to logout endpoint
-        });
+        if (user) {
+            const initials = user.name.split(' ').map(name => name[0]).join('');
+            userProfile.innerHTML = `
+                <img src="${user.picture || 'default-profile-pic.jpg'}" alt="${initials}" class="w-8 h-8 rounded-full">
+                <span class="text-gray-100">${user.name || initials}</span>
+                <button id="logoutButton" class="ml-4 text-gray-100 bg-red-500 p-2 rounded">Logout</button>
+            `;
+            
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                window.location.href = '/logout'; // Redirect to logout endpoint
+            });
+        }
+    } catch (error) {
+        console.error('Error loading user profile:', error);
     }
 }
