@@ -18,9 +18,9 @@
 12. [] Use CI/CD 
  
  
- # Make a React NodeJS webscraping holiday app which will show child friendly options 
+ # Next project - Make a React/NodeJS webscraping holiday app which will show child friendly options 
 
-1. [] React 
+
 ### Front-End -
 1. [] Auth0
 2. [] React
