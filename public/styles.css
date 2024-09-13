@@ -13,6 +13,19 @@ body {
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
     position: relative; /* Position relative for the toggle switch */
 }
+header {
+    background-color: #1f2937; /* Dark background for the header */
+    padding: 16px; /* Padding inside the header */
+    display: flex; /* Flexbox for layout */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Space out items horizontally */
+    position: fixed; /* Fix the header at the top of the viewport */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 100%; /* Full width of the viewport */
+    z-index: 1000; /* Ensure the header is above other content */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the header */
+}
 
 /* Header styling */
 h1.text-2xl.text-gray-100.mb-5 {
@@ -20,6 +33,7 @@ h1.text-2xl.text-gray-100.mb-5 {
     font-size: 1.75rem; /* Slightly smaller font size */
     margin-bottom: 1.5rem; /* More spacing below the header */
 }
+
 
 /* Input styling */
 input#description {
