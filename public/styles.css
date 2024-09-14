@@ -9,9 +9,9 @@ body {
 .w-full.max-w-4xl.bg-gray-800.p-5 {
     background-color: #1f2937; /* White background for the container */
     padding: 2rem; /* More padding for a spacious feel */
-   
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
     position: relative; /* Position relative for the toggle switch */
+    margin-top: 13vh;
 }
 header {
     background-color: #1f2937; /* Dark background for the header */
