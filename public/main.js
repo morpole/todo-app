@@ -1,5 +1,5 @@
+// Load tasks on page load
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load tasks on page load
     await loadTasks();
 });
 
@@ -15,7 +15,7 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
     });
     document.getElementById('description').value = '';
 
-    loadTasks(); // Reload tasks after adding a new one
+    loadTasks(); 
 });
 
 // Load and display tasks
@@ -141,26 +141,3 @@ function attachEventListeners() {
     });
 }
 
-// Load user profile information (if needed, adjust as per requirements)
-async function loadUserProfile() {
-    const userProfile = document.getElementById('userProfile');
-    try {
-        const response = await fetch('/api/userinfo'); // Endpoint to get user info
-        const user = await response.json();
-
-        if (user) {
-            const initials = user.name.split(' ').map(name => name[0]).join('');
-            userProfile.innerHTML = `
-                <img src="${user.picture || 'default-profile-pic.jpg'}" alt="${initials}" class="w-8 h-8 rounded-full">
-                <span class="text-gray-100">${user.name || initials}</span>
-                <button id="logoutButton" class="ml-4 text-gray-100 bg-red-500 p-2 rounded">Logout</button>
-            `;
-            
-            document.getElementById('logoutButton').addEventListener('click', () => {
-                window.location.href = '/logout'; // Redirect to logout endpoint
-            });
-        }
-    } catch (error) {
-        console.error('Error loading user profile:', error);
-    }
-}

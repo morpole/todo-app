@@ -28,19 +28,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Routes
-app.get('/protected', (req, res) => {
-  res.send('Protected route');
-});
-
-app.get('/login', (req, res) => {
-  res.send('Login page');
-});
-
-app.get('/signed-out', (req, res) => {
-  res.sendFile(__dirname + '/public/signout.html');
-});
-
-app.get('/logout', (req, res) => {
-  res.send('Logout');
-});
